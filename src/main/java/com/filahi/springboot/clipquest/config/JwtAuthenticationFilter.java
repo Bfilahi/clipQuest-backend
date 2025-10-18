@@ -2,6 +2,7 @@ package com.filahi.springboot.clipquest.config;
 
 
 import com.filahi.springboot.clipquest.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,20 +47,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = header.substring(7);
-        userEmail = this.jwtService.extractUsername(jwt);
 
-        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails =  this.userDetailsService.loadUserByUsername(userEmail);
+        try{
+            userEmail = this.jwtService.extractUsername(jwt);
 
-            if(this.jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken =  new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
+            if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails =  this.userDetailsService.loadUserByUsername(userEmail);
 
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                if(this.jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken =  new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+        }catch (ExpiredJwtException e){
+            request.setAttribute("expired", e.getMessage());
+        }catch (Exception e){
+            request.setAttribute("invalid", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
