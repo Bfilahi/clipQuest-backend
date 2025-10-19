@@ -2,6 +2,7 @@ package com.filahi.springboot.clipquest.service.impl;
 
 import com.filahi.springboot.clipquest.entity.Authority;
 import com.filahi.springboot.clipquest.entity.User;
+import com.filahi.springboot.clipquest.repository.UserRepository;
 import com.filahi.springboot.clipquest.response.UserResponse;
 import com.filahi.springboot.clipquest.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,6 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -26,6 +35,14 @@ public class UserServiceImpl implements UserService {
                 user.getEmail(),
                 user.getAuthorities().stream().map(auth -> (Authority) auth).toList()
         );
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser() {
+        User user = getAuthenticatedUser();
+
+        this.userRepository.deleteById(user.getId());
     }
 
 
