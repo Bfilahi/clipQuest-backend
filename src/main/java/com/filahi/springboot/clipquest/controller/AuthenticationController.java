@@ -1,7 +1,9 @@
 package com.filahi.springboot.clipquest.controller;
 
 
+import com.filahi.springboot.clipquest.request.LoginRequest;
 import com.filahi.springboot.clipquest.request.RegisterRequest;
+import com.filahi.springboot.clipquest.response.LoginResponse;
 import com.filahi.springboot.clipquest.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,5 +30,12 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public void signup(@Valid @RequestBody RegisterRequest  registerRequest) throws Exception {
         this.authenticationService.signup(registerRequest);
+    }
+
+    @Operation(summary = "User login", description = "Authenticating the user")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+        return this.authenticationService.login(loginRequest);
     }
 }
