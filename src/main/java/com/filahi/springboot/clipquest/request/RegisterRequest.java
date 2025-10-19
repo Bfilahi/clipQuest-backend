@@ -13,8 +13,8 @@ public record RegisterRequest(
         @Size(min = 3, max = 30, message = "Lastname must be at least 3 characters long")
         String lastName,
 
-        @NotEmpty(message = "Username is mandatory")
-        String username,
+//        @NotEmpty(message = "Username is mandatory")
+//        String username,
 
         @NotEmpty(message = "Email is mandatory")
         @Email(message = "Invalid email format")
