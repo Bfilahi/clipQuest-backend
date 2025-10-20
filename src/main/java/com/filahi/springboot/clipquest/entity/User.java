@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,10 +41,10 @@ public class User implements UserDetails {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @UpdateTimestamp
-    private LocalDate updateDate;
+    private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos;
