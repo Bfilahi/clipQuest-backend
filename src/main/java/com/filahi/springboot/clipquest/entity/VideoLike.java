@@ -40,9 +40,4 @@ public class VideoLike {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
-//    @Table(uniqueConstraints = {
-//            @UniqueConstraint(columnNames = {"user_id", "video_id"})
-//    })
-//    public static class TableDefinition{}
 }

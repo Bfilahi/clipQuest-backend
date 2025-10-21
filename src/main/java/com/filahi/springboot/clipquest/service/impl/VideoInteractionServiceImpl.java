@@ -10,10 +10,10 @@ import com.filahi.springboot.clipquest.repository.VideoRepository;
 import com.filahi.springboot.clipquest.repository.VideoViewRepository;
 import com.filahi.springboot.clipquest.response.VideoLikeResponse;
 import com.filahi.springboot.clipquest.service.VideoInteractionService;
+import com.filahi.springboot.clipquest.util.FindAuthenticatedUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -26,16 +26,20 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
     private final VideoRepository videoRepository;
     private final VideoLikeRepository videoLikeRepository;
     private final VideoViewRepository videoViewRepository;
+    private final FindAuthenticatedUser findAuthenticatedUser;
 
-    public VideoInteractionServiceImpl(VideoRepository videoRepository, VideoLikeRepository videoLikeRepository, VideoViewRepository videoViewRepository) {
+    public VideoInteractionServiceImpl(VideoRepository videoRepository, VideoLikeRepository videoLikeRepository, VideoViewRepository videoViewRepository, FindAuthenticatedUser findAuthenticatedUser) {
         this.videoRepository = videoRepository;
         this.videoLikeRepository = videoLikeRepository;
         this.videoViewRepository = videoViewRepository;
+        this.findAuthenticatedUser = findAuthenticatedUser;
     }
 
 
     @Override
-    public VideoLikeResponse toggleLike(long videoId, User user, LikeType likeType) {
+    public VideoLikeResponse toggleLike(long videoId, LikeType likeType) {
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
+
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 
@@ -84,7 +88,9 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
 
 
     @Override
-    public void registerView(long videoId, User user, String ipAddress) {
+    public void registerView(long videoId, String ipAddress) {
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
+
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 
@@ -115,7 +121,9 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
 
 
     @Override
-    public LikeType getUserLikeStatus(long videoId, User user) {
+    public LikeType getUserLikeStatus(long videoId) {
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
+
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 

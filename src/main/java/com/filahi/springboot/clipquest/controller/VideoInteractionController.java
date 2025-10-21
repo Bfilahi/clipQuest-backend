@@ -27,19 +27,17 @@ public class VideoInteractionController {
     @Operation(summary = "Like a video", description = "Saving likes to database")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/{videoId}/like")
-    public VideoLikeResponse likeVideo(@PathVariable long videoId,
-                                       @AuthenticationPrincipal User user){
+    public VideoLikeResponse likeVideo(@PathVariable long videoId){
 
-        return this.videoInteractionService.toggleLike(videoId, user, LikeType.LIKE);
+        return this.videoInteractionService.toggleLike(videoId, LikeType.LIKE);
     }
 
     @Operation(summary = "Dislike video", description = "Saving dislikes to database")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/{videoId}/dislike")
-    public VideoLikeResponse dislikeVideo(@PathVariable long videoId,
-                                          @AuthenticationPrincipal User user) {
+    public VideoLikeResponse dislikeVideo(@PathVariable long videoId) {
 
-        return this.videoInteractionService.toggleLike(videoId, user, LikeType.DISLIKE);
+        return this.videoInteractionService.toggleLike(videoId, LikeType.DISLIKE);
     }
 
 
@@ -47,18 +45,16 @@ public class VideoInteractionController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/{videoId}/view")
     public void registerView(@PathVariable long videoId,
-                             @AuthenticationPrincipal User user,
                              HttpServletRequest request) {
 
         String ipAddress = request.getRemoteAddr();
-        this.videoInteractionService.registerView(videoId, user, ipAddress);
+        this.videoInteractionService.registerView(videoId, ipAddress);
     }
 
 
     @GetMapping("/{videoId}/like-status")
-    public LikeType getLikeStatus(@PathVariable long videoId,
-                                  @AuthenticationPrincipal User user) {
+    public LikeType getLikeStatus(@PathVariable long videoId) {
 
-        return this.videoInteractionService.getUserLikeStatus(videoId, user);
+        return this.videoInteractionService.getUserLikeStatus(videoId);
     }
 }
