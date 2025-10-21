@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,9 +35,13 @@ public class VideoController {
 
     @Operation(summary = "Upload video", description = "Upload video and save it to database")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/upload-video")
-    public VideoResponse uploadVideo(@Valid @RequestBody VideoRequest videoRequest) {
-        return this.videoService.uploadVideo(videoRequest);
+    @PostMapping(value = "/upload-video", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public VideoResponse uploadVideo(@RequestParam String title,
+                                     @RequestParam String description,
+                                     @RequestPart MultipartFile file) {
+
+        VideoRequest videoRequest = new VideoRequest(title, description);
+        return this.videoService.uploadVideo(videoRequest, file);
     }
 
     @Operation(summary = "Delete video", description = "Delete video from database")
