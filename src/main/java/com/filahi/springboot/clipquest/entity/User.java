@@ -33,11 +33,17 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private int age;
+
     @Column(nullable = false,  unique = true, length = 100)
     private String email;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @CreationTimestamp
     @Column(updatable = false)
