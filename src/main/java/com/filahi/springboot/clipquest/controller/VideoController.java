@@ -33,6 +33,13 @@ public class VideoController {
         return this.videoService.getVideos();
     }
 
+    @Operation(summary = "Get a video", description = "Retrieve a video by id")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{videoId}")
+    public VideoResponse getVideo(@PathVariable long videoId) {
+        return this.videoService.getVideo(videoId);
+    }
+
     @Operation(summary = "Upload video", description = "Upload video and save it to database")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/upload-video", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

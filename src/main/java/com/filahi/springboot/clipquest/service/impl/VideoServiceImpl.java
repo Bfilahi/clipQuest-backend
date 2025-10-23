@@ -74,6 +74,19 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    public VideoResponse getVideo(long videoId) {
+        Video video = this.videoRepository.findById(videoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return new VideoResponse(
+                video.getId(),
+                video.getTitle(),
+                video.getDescription(),
+                video.getFilePath()
+        );
+    }
+
+    @Override
     public void deleteVideo(long videoId) {
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
