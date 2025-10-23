@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-@ToString(exclude = "videos")
+@ToString(exclude = {"videos", "comments"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -54,6 +54,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))

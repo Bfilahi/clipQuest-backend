@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "videos")
 @Data
-@ToString(exclude = {"likes", "views"})
+@ToString(exclude = {"likes", "views", "comments"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Video {
@@ -42,6 +42,9 @@ public class Video {
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoView> views;
+
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
