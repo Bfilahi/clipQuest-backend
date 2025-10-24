@@ -6,9 +6,6 @@ import com.filahi.springboot.clipquest.repository.UserRepository;
 import com.filahi.springboot.clipquest.response.UserResponse;
 import com.filahi.springboot.clipquest.service.UserService;
 import com.filahi.springboot.clipquest.util.FindAuthenticatedUser;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

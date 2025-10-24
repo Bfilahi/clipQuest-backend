@@ -2,10 +2,12 @@ package com.filahi.springboot.clipquest.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.filahi.springboot.clipquest.entity.Authority;
 import com.filahi.springboot.clipquest.entity.User;
 import com.filahi.springboot.clipquest.entity.Video;
 import com.filahi.springboot.clipquest.repository.VideoRepository;
 import com.filahi.springboot.clipquest.request.VideoRequest;
+import com.filahi.springboot.clipquest.response.UserResponse;
 import com.filahi.springboot.clipquest.response.VideoResponse;
 import com.filahi.springboot.clipquest.service.VideoService;
 import com.filahi.springboot.clipquest.util.FindAuthenticatedUser;
@@ -36,6 +38,27 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
+    public List<VideoResponse> getAllVideos() {
+        List<Video> videos = this.videoRepository.findAll();
+        return convertToVideoResponse(videos);
+    }
+
+    @Override
+    public List<VideoResponse> getUserVideos() {
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
+        List<Video> videos = this.videoRepository.findByUser(user);
+        return convertToVideoResponse(videos);
+    }
+
+    @Override
+    public VideoResponse getVideo(long videoId) {
+        Video video = this.videoRepository.findById(videoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return getVideoResponse(video);
+    }
+
+    @Override
     @Transactional
     public VideoResponse uploadVideo(VideoRequest videoRequest, MultipartFile file) {
         User user = this.findAuthenticatedUser.getAuthenticatedUser();
@@ -46,49 +69,19 @@ public class VideoServiceImpl implements VideoService {
         video.setDescription(videoRequest.description());
         video.setUser(user);
 
-        Map<?,?> uploadResult = uploadVideo(file);
+        Map<?,?> uploadResult = uploadVideoToCloud(file);
         video.setFilePath(uploadResult.get("secure_url").toString());
 
         this.videoRepository.save(video);
 
-        return new VideoResponse(
-                video.getId(),
-                video.getTitle(),
-                video.getDescription(),
-                video.getFilePath()
-        );
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<VideoResponse> getVideos() {
-        User user = this.findAuthenticatedUser.getAuthenticatedUser();
-        List<Video> videos = this.videoRepository.findByUser(user);
-
-        return videos.stream().map(video -> new VideoResponse(
-                video.getId(),
-                video.getTitle(),
-                video.getDescription(),
-                video.getFilePath()
-        )).toList();
-    }
-
-    @Override
-    public VideoResponse getVideo(long videoId) {
-        Video video = this.videoRepository.findById(videoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        return new VideoResponse(
-                video.getId(),
-                video.getTitle(),
-                video.getDescription(),
-                video.getFilePath()
-        );
+        return getVideoResponse(video);
     }
 
     @Override
     public void deleteVideo(long videoId) {
-        Video video = this.videoRepository.findById(videoId)
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
+
+        Video video = this.videoRepository.findByUserAndId(user, videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 
         this.videoRepository.delete(video);
@@ -96,24 +89,19 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public VideoResponse editVideo(long videoId, VideoRequest videoRequest) {
-        Video video = this.videoRepository.findById(videoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
+        User user = this.findAuthenticatedUser.getAuthenticatedUser();
 
+        Video video = this.videoRepository.findByUserAndId(user, videoId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
         video.setTitle(videoRequest.title());
         video.setDescription(videoRequest.description());
 
         this.videoRepository.save(video);
-
-        return new VideoResponse(
-                video.getId(),
-                video.getTitle(),
-                video.getDescription(),
-                video.getFilePath()
-        );
+        return getVideoResponse(video);
     }
 
 
-    private Map<?,?> uploadVideo(MultipartFile file) {
+    private Map<?,?> uploadVideoToCloud(MultipartFile file) {
         try{
             return this.cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                     "resource_type", "video",
@@ -123,5 +111,27 @@ public class VideoServiceImpl implements VideoService {
         catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    private static List<VideoResponse> convertToVideoResponse(List<Video> videos) {
+        return videos.stream().map(VideoServiceImpl::getVideoResponse).toList();
+    }
+
+    private static VideoResponse getVideoResponse(Video video) {
+        return new VideoResponse(
+                video.getId(),
+                video.getTitle(),
+                video.getDescription(),
+                video.getFilePath(),
+                new UserResponse(
+                        video.getUser().getId(),
+                        video.getUser().getFirstName(),
+                        video.getUser().getLastName(),
+                        video.getUser().getAge(),
+                        video.getUser().getEmail(),
+                        video.getUser().getPhoneNumber(),
+                        video.getUser().getAuthorities().stream().map(auth -> (Authority) auth).toList()
+                )
+        );
     }
 }

@@ -7,9 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface VideoService {
-    VideoResponse uploadVideo(VideoRequest video, MultipartFile file);
-    List<VideoResponse> getVideos();
+    List<VideoResponse> getAllVideos();
+    List<VideoResponse> getUserVideos();
     VideoResponse getVideo(long videoId);
+    VideoResponse uploadVideo(VideoRequest video, MultipartFile file);
     void deleteVideo(long videoId);
     VideoResponse editVideo(long videoId, VideoRequest videoRequest);
 }

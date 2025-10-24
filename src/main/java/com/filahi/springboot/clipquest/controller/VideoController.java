@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user/videos")
+@RequestMapping("/api/videos")
 @Tag(name = "Video REST API Endpoints", description = "Operations related to videos")
 public class VideoController {
 
@@ -26,23 +26,30 @@ public class VideoController {
     }
 
 
-    @Operation(summary = "Get all videos", description = "Retrieve list of current user's videos")
+    @Operation(summary = "Get all videos", description = "Retrieve list of all videos")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<VideoResponse> getVideos() {
-        return this.videoService.getVideos();
+    public List<VideoResponse> getAllVideos() {
+        return this.videoService.getAllVideos();
+    }
+
+    @Operation(summary = "Get user videos", description = "Retrieve list of current user's videos")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/user")
+    public List<VideoResponse> getUserVideos() {
+        return this.videoService.getUserVideos();
     }
 
     @Operation(summary = "Get a video", description = "Retrieve a video by id")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{videoId}")
+    @GetMapping("/video/{videoId}")
     public VideoResponse getVideo(@PathVariable long videoId) {
         return this.videoService.getVideo(videoId);
     }
 
     @Operation(summary = "Upload video", description = "Upload video and save it to database")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/upload-video", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/user/upload-video", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public VideoResponse uploadVideo(@RequestParam String title,
                                      @RequestParam String description,
                                      @RequestPart MultipartFile file) {
@@ -53,14 +60,14 @@ public class VideoController {
 
     @Operation(summary = "Delete video", description = "Delete video from database")
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/{videoId}")
+    @DeleteMapping("/user/{videoId}")
     public void deleteVideo(@PathVariable long videoId) {
         this.videoService.deleteVideo(videoId);
     }
 
     @Operation(summary = "Update video", description = "Update video")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("edit/{videoId}/video")
+    @PutMapping("/user/edit/{videoId}/video")
     public VideoResponse editVideo(@PathVariable long videoId,
                                    @Valid @RequestBody VideoRequest videoRequest) {
 

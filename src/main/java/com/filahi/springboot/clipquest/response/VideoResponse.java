@@ -4,6 +4,7 @@ public record VideoResponse(
     long id,
     String title,
     String description,
-    String pathFile
+    String pathFile,
+    UserResponse user
 ) {
 }

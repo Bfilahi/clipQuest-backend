@@ -33,7 +33,7 @@ public class Video {
     @Column(nullable = false)
     private String filePath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

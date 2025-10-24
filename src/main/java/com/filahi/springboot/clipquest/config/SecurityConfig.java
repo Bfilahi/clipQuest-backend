@@ -70,7 +70,10 @@ public class SecurityConfig {
             configurer
                     .requestMatchers(
                             "/api/auth/**",
+                            "/api/videos",
+                            "/api/videos/video/**",
                             "/api/videos/{videoId}/view",
+                            "/api/comments/video/**",
 
                             "/swagger-ui/**",
                             "/v3/api-docs/**",

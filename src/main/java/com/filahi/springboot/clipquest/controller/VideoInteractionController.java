@@ -1,7 +1,6 @@
 package com.filahi.springboot.clipquest.controller;
 
 
-import com.filahi.springboot.clipquest.entity.User;
 import com.filahi.springboot.clipquest.enumeration.LikeType;
 import com.filahi.springboot.clipquest.response.VideoLikeResponse;
 import com.filahi.springboot.clipquest.service.VideoInteractionService;
@@ -9,8 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/videos")
