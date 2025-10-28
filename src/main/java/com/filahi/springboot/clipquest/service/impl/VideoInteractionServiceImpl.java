@@ -118,14 +118,6 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
         }
     }
 
-//    @Override
-//    public Long getVideoViews(long videoId) {
-//        Video video = this.videoRepository.findById(videoId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
-//
-//
-//    }
-
     @Override
     public LikeType getUserLikeStatus(long videoId) {
         User user = this.findAuthenticatedUser.getAuthenticatedUser();
