@@ -106,7 +106,6 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
             );
         }
 
-
         if(!alreadyViewed){
             VideoView videoView = new VideoView();
             videoView.setVideo(video);
@@ -119,6 +118,13 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
         }
     }
 
+//    @Override
+//    public Long getVideoViews(long videoId) {
+//        Video video = this.videoRepository.findById(videoId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
+//
+//
+//    }
 
     @Override
     public LikeType getUserLikeStatus(long videoId) {
@@ -131,6 +137,7 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
                 .map(VideoLike::getType)
                 .orElse(null);
     }
+
 
 
     private void updateCachedCounts(Video video) {

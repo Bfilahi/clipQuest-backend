@@ -31,7 +31,6 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime lastModifiedDate;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     private User user;
 

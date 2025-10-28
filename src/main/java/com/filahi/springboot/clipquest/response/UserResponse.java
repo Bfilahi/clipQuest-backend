@@ -11,6 +11,7 @@ public record UserResponse(
         int age,
         String email,
         String phoneNumber,
+        String profilePicture,
         List<Authority> authorities
 ) {
 }

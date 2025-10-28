@@ -30,26 +30,26 @@ public class CommentController {
         return this.commentService.getAllComments(videoId);
     }
 
-    @Operation(summary = "Get user comments", description = "Retrieve list of all comments made by a user")
+    @Operation(summary = "Get user comments", description = "Retrieve list of all comments made by a user for a specific video")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/user")
-    public List<CommentResponse> getUserComments() {
-        return this.commentService.getUserComments();
+    @GetMapping("/user/{videoId}")
+    public List<CommentResponse> getUserComments(@PathVariable long videoId) {
+        return this.commentService.getUserComments(videoId);
     }
 
     @Operation(summary = "Add a comment", description = "Save a comment to database")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/{videoId}/new-comment")
-    public CommentResponse addComment(@PathVariable long videoId, String comment){
+    public CommentResponse addComment(@PathVariable long videoId, @RequestParam String comment){
         return this.commentService.addComment(videoId, comment);
     }
 
-    @Operation(summary = "Update a comment", description = "Update a comment")
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/user/{commentId}")
-    public CommentResponse updateComment(@PathVariable long commentId, String comment){
-        return this.commentService.updateComment(commentId, comment);
-    }
+//    @Operation(summary = "Update a comment", description = "Update a comment")
+//    @ResponseStatus(HttpStatus.OK)
+//    @PutMapping("/user/{commentId}")
+//    public CommentResponse updateComment(@PathVariable long commentId, @RequestParam String comment){
+//        return this.commentService.updateComment(commentId, comment);
+//    }
 
     @Operation(summary = "Delete a comment", description = "Delete a comment from database")
     @ResponseStatus(HttpStatus.OK)

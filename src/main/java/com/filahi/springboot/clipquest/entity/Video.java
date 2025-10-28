@@ -33,6 +33,12 @@ public class Video {
     @Column(nullable = false)
     private String filePath;
 
+    @Column(nullable = false)
+    private String thumbnailPath;
+
+    @Column(nullable = false)
+    private String CloudinaryPublicId;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

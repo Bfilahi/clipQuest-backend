@@ -1,6 +1,7 @@
 package com.filahi.springboot.clipquest.service.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.filahi.springboot.clipquest.entity.Authority;
 import com.filahi.springboot.clipquest.entity.User;
@@ -8,6 +9,7 @@ import com.filahi.springboot.clipquest.entity.Video;
 import com.filahi.springboot.clipquest.repository.VideoRepository;
 import com.filahi.springboot.clipquest.request.VideoRequest;
 import com.filahi.springboot.clipquest.response.UserResponse;
+import com.filahi.springboot.clipquest.response.VideoLikeResponse;
 import com.filahi.springboot.clipquest.response.VideoResponse;
 import com.filahi.springboot.clipquest.service.VideoService;
 import com.filahi.springboot.clipquest.util.FindAuthenticatedUser;
@@ -70,11 +72,28 @@ public class VideoServiceImpl implements VideoService {
         video.setUser(user);
 
         Map<?,?> uploadResult = uploadVideoToCloud(file);
+        String publicId = uploadResult.get("public_id").toString();
+
         video.setFilePath(uploadResult.get("secure_url").toString());
+        video.setCloudinaryPublicId(publicId);
+        video.setThumbnailPath(generateThumbnail(publicId));
 
         this.videoRepository.save(video);
-
         return getVideoResponse(video);
+    }
+
+    private String generateThumbnail(String publicId){
+        return this.cloudinary.url()
+                .resourceType("video")
+                .transformation(new Transformation()
+                        .startOffset("10")
+                        .width(640)
+                        .height(360)
+                        .crop("fill")
+                        .quality("auto")
+                        .fetchFormat("jpg")
+                )
+                .generate(publicId);
     }
 
     @Override
@@ -85,6 +104,7 @@ public class VideoServiceImpl implements VideoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 
         this.videoRepository.delete(video);
+        deleteVideoFromCloud(video.getCloudinaryPublicId());
     }
 
     @Override
@@ -113,7 +133,19 @@ public class VideoServiceImpl implements VideoService {
         }
     }
 
-    private static List<VideoResponse> convertToVideoResponse(List<Video> videos) {
+    private void deleteVideoFromCloud(String cloudinaryPublicId) {
+        try{
+            this.cloudinary.uploader().destroy(cloudinaryPublicId, ObjectUtils.asMap(
+                    "resource_type", "video",
+                    "folder", "clipquest_videos"
+            ));
+        }
+        catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    private List<VideoResponse> convertToVideoResponse(List<Video> videos) {
         return videos.stream().map(VideoServiceImpl::getVideoResponse).toList();
     }
 
@@ -123,6 +155,9 @@ public class VideoServiceImpl implements VideoService {
                 video.getTitle(),
                 video.getDescription(),
                 video.getFilePath(),
+                video.getCloudinaryPublicId(),
+                video.getThumbnailPath(),
+                video.getCreatedAt(),
                 new UserResponse(
                         video.getUser().getId(),
                         video.getUser().getFirstName(),
@@ -130,8 +165,15 @@ public class VideoServiceImpl implements VideoService {
                         video.getUser().getAge(),
                         video.getUser().getEmail(),
                         video.getUser().getPhoneNumber(),
+                        video.getUser().getProfilePicture(),
                         video.getUser().getAuthorities().stream().map(auth -> (Authority) auth).toList()
-                )
+                ),
+                new VideoLikeResponse(
+                        null,
+                        video.getCachedLikesCount(),
+                        video.getCachedDislikesCount()
+                ),
+                video.getCachedViewsCount()
         );
     }
 }

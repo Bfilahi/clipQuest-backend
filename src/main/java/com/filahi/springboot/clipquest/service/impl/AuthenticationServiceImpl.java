@@ -75,6 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setEmail(registerRequest.email());
         user.setPassword(this.passwordEncoder.encode(registerRequest.password()));
         user.setPhoneNumber(registerRequest.phoneNumber());
+        user.setProfilePicture("https://robohash.org/" + user.getFirstName());
         user.setAuthorities(getAuthorities());
 
         return user;

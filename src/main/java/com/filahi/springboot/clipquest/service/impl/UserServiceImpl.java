@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
                 user.getAge(),
                 user.getEmail(),
                 user.getPhoneNumber(),
+                user.getProfilePicture(),
                 user.getAuthorities().stream().map(auth -> (Authority) auth).toList()
         );
     }

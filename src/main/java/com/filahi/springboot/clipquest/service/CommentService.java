@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface CommentService {
     List<CommentResponse> getAllComments(long videoId);
-    List<CommentResponse> getUserComments();
+    List<CommentResponse> getUserComments(long videoId);
     CommentResponse addComment(long videoId, String comment);
-    CommentResponse updateComment(long commentId, String comment);
+//    CommentResponse updateComment(long commentId, String comment);
     void deleteComment(long commentId);
 }

@@ -50,10 +50,15 @@ public class VideoInteractionController {
         this.videoInteractionService.registerView(videoId, ipAddress);
     }
 
+//    @GetMapping("/{videoId}/views")
+//    public Long getVideoViews(@PathVariable long videoId) {
+//
+//    }
 
+    @Operation(summary = "Get like status", description = "Get like status")
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{videoId}/like-status")
     public LikeType getLikeStatus(@PathVariable long videoId) {
-
         return this.videoInteractionService.getUserLikeStatus(videoId);
     }
 }

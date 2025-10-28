@@ -9,8 +9,5 @@ public record VideoRequest(
 
         @NotEmpty(message = "Description is mandatory")
         String description
-
-//        @NotEmpty(message = "FilePath is mandatory")
-//        String filePath
 ) {
 }

@@ -11,6 +11,5 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Authority implements GrantedAuthority {
-
     private String authority;
 }
