@@ -44,13 +44,6 @@ public class CommentController {
         return this.commentService.addComment(videoId, comment);
     }
 
-//    @Operation(summary = "Update a comment", description = "Update a comment")
-//    @ResponseStatus(HttpStatus.OK)
-//    @PutMapping("/user/{commentId}")
-//    public CommentResponse updateComment(@PathVariable long commentId, @RequestParam String comment){
-//        return this.commentService.updateComment(commentId, comment);
-//    }
-
     @Operation(summary = "Delete a comment", description = "Delete a comment from database")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/user/{commentId}")

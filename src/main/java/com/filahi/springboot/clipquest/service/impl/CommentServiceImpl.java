@@ -46,7 +46,6 @@ public class CommentServiceImpl implements CommentService {
         User user = this.findAuthenticatedUser.getAuthenticatedUser();
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
-//        List<Comment> comments = this.commentRepository.findByUser(user);
         List<Comment> comments = this.commentRepository.findByVideoAndUser(video, user);
         return convertToCommentResponse(comments);
     }
@@ -68,18 +67,6 @@ public class CommentServiceImpl implements CommentService {
         this.commentRepository.save(newComment);
         return convertToCommentResponse(newComment);
     }
-
-
-//    @Override
-//    @Transactional
-//    public CommentResponse updateComment(long commentId, String comment) {
-//        User user = this.findAuthenticatedUser.getAuthenticatedUser();
-//        Comment theComment = this.commentRepository.findByUserAndId(user, commentId)
-//                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
-//        theComment.setComment(comment);
-//        this.commentRepository.save(theComment);
-//        return convertToCommentResponse(theComment);
-//    }
 
     @Override
     @Transactional
