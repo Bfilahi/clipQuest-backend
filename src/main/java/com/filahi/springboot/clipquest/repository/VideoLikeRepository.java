@@ -15,9 +15,6 @@ import java.util.Optional;
 @Repository
 public interface VideoLikeRepository extends JpaRepository<VideoLike, Long> {
     Optional<VideoLike> findByUserAndVideo(User user, Video video);
-
-    boolean existsByUserAndVideo(User user, Video video);
-
     long countByVideoAndType(Video video, LikeType type);
 
     @Modifying

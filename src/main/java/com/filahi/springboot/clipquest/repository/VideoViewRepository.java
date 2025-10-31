@@ -11,10 +11,6 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface VideoViewRepository extends JpaRepository<VideoView, Long> {
-    boolean existsByUserAndVideo(User user, Video video);
-
     boolean existsByIpAddressAndVideoAndViewedAtAfter(
             String ipAddress, Video video, LocalDateTime viewedAt);
-
-    long countByVideo(Video video);
 }

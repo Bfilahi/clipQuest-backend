@@ -89,27 +89,19 @@ public class VideoInteractionServiceImpl implements VideoInteractionService {
 
     @Override
     public void registerView(long videoId, String ipAddress) {
-//        User user = this.findAuthenticatedUser.getAuthenticatedUser();
-
         Video video = this.videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
 
         boolean alreadyViewed = false;
 
-/*        if(user != null){
-            alreadyViewed = this.videoViewRepository.existsByUserAndVideo(user, video);
-        }
-        else{*/
-            LocalDateTime oneDayAgo =  LocalDateTime.now().minusDays(1);
-            alreadyViewed = this.videoViewRepository.existsByIpAddressAndVideoAndViewedAtAfter(
-                    ipAddress, video, oneDayAgo
-            );
-//        }
+        LocalDateTime oneDayAgo =  LocalDateTime.now().minusDays(1);
+        alreadyViewed = this.videoViewRepository.existsByIpAddressAndVideoAndViewedAtAfter(
+                ipAddress, video, oneDayAgo
+        );
 
         if(!alreadyViewed){
             VideoView videoView = new VideoView();
             videoView.setVideo(video);
-//            videoView.setUser(user);
             videoView.setIpAddress(ipAddress);
             videoViewRepository.save(videoView);
 

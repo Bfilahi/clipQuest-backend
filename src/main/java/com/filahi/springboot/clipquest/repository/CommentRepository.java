@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByVideo(Video video);
-//    List<Comment> findByUser(User user);
     List<Comment> findByVideoAndUser(Video video, User user);
     Optional<Comment> findByUserAndId(User user, long commentId);
 }

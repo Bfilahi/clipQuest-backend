@@ -35,7 +35,7 @@ public class AuthenticationController {
     @Operation(summary = "User login", description = "Authenticating the user")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return this.authenticationService.login(loginRequest);
     }
 }
