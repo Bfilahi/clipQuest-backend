@@ -8,4 +8,5 @@ public class ClipquestApplication {
 	public static void main(String[] args) {
         SpringApplication.run(ClipquestApplication.class, args);
 	}
+
 }
