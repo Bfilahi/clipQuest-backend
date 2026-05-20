@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class FindAutheticatedUserImpl implements FindAuthenticatedUser{
+public class FindAuthenticatedUserImpl implements FindAuthenticatedUser{
 
     @Override
     public User getAuthenticatedUser() {
